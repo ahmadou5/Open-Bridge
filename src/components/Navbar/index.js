@@ -60,8 +60,9 @@ export const Navbar = () => {
         <div className="py-5 px-5  mt-auto mb-auto ml-auto mr-auto w-[98%] flex flex-row  h-[90%]">
           <div className="ml-0 mr-auto">
             <Link href={"/"}>
-              <div className="text-xl">
-                <img className="w-56 h-13" src="./assets/head.png" />
+              <div className="text-sm flex">
+                <img className="w-12 h-13" src="./assets/body.png" />
+                <p className="text-blue-300 font-thin ml-1">Beta</p>
               </div>
             </Link>
           </div>
@@ -70,7 +71,7 @@ export const Navbar = () => {
               {Pages.map((page, i) => (
                 <p
                   key={i}
-                  className="ml-2 mr-2 text-blue-400 cursor-pointer hover:font-light font-bold text-lg"
+                  className="ml-2 mr-2 text-white cursor-pointer hover:font-light font-bold text-lg"
                 >
                   {page.name}
                 </p>

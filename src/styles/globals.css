@@ -17,11 +17,7 @@
 }
 
 body {
-  color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
+  color: bisque;
+  background: rgb(104,171,238);
+  background: linear-gradient(0deg, rgba(104,171,238,1) 0%, rgba(7,20,33,1) 74%, rgba(0,0,0,1) 100%);
 }
