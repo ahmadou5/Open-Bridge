@@ -41,7 +41,10 @@ export const Navbar = () => {
         <div className="w-[98%] flex flex-row mt-1 py-2 px-2 ml-auto mr-auto h-[90%]">
           <div className="ml-0 mr-auto mt-auto mb-auto">
             <Link href={"/"}>
-              <div className="text-2xl font-semibold">GoSpace</div>
+              <div className="text-xl font-semibold flex">
+                <img className="w-12 h-13" src="./assets/body.png" />
+                <p className="text-blue-300 font-thin ml-1">Beta</p>
+              </div>
             </Link>
           </div>
           <div className="mr-2 ml-auto mt-auto mb-auto">

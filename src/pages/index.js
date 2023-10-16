@@ -5,6 +5,7 @@ import { Web3Button } from '@web3modal/react'
 import { useBalance, useAccount, useBlockNumber } from 'wagmi'
 import { useState } from 'react'
 import { Hero } from '@/components/Hero'
+import { Transfer } from '@/components/Transfer'
 
 const inter = Inter({ subsets: ['latin'] })
 const poppins = Poppins({weight: '500' , subsets: ['latin']})
@@ -23,6 +24,7 @@ export default function Home() {
     >
       <Navbar />
       <Hero />
+      <Transfer />
       <div className='mt-32 mb-[300px]'>
         <Web3Button />
         { isLoading ? <>Loading...</> : data?.formatted }
