@@ -21,7 +21,7 @@ export default function EthProvider({children}) {
           {children}
         </WagmiConfig>
   
-        <Web3Modal projectId={projectId} ethereumClient={ethereumClient} />
+        <Web3Modal themeVariables={{'--w3m-color-mix': '#00BB7F','--w3m-color-mix-strength': 40}} themeMode='dark' projectId={projectId} defaultChain={baseGoerli} ethereumClient={ethereumClient} />
       </>
     )
   }
