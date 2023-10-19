@@ -20,18 +20,11 @@ export default function Home() {
   
   return (
     <main
-      className={`flex min-h-screen flex-col items-center justify-between  ${poppins.className}`}
+      className={`flex min-h-screen flex-col h-[1400px] items-center justify-between  ${poppins.className}`}
     >
       <Navbar />
       <Hero />
       <Transfer />
-      <div className='mt-32 mb-[300px]'>
-        <Web3Button />
-        { isLoading ? <>Loading...</> : data?.formatted }
-        { isConnecting && <>Loading....</>}
-        { `block : ${ blockdata?.toString()}`}
-      </div>
-      
     </main>
   )
 }
