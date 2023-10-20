@@ -1,7 +1,7 @@
 'use client'
 export const Hero = () => {
   return (
-    <div id="bg" className="w-[100%] h-auto lg:h-[500px] mt-20 text-2xl">
+    <div id="bg" className="w-[100%] mb-[240px] h-auto lg:h-[500px] mt-20 text-2xl">
       {/** mobile view */}
       <div className=" drop-shadow-2xl mt-1 hidden  w-[100%] lg :hidden md:hidden">
         mobile

@@ -20,7 +20,7 @@ export default function Home() {
   
   return (
     <main
-      className={`flex min-h-screen flex-col h-[1400px] items-center justify-between  ${poppins.className}`}
+      className={`flex min-h-screen flex-col  items-center justify-between  ${poppins.className}`}
     >
       <Navbar />
       <Hero />

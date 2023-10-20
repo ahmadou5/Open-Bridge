@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { Button } from "../Buttons";
 
 export const Navbar = () => {
   const [show, setShow] = useState(false);
@@ -21,12 +22,7 @@ export const Navbar = () => {
       status: "Coming Soon",
     },
     {
-      name: "NFTs Bridge",
-      url: "",
-      status: "Coming Soon",
-    },
-    {
-      name: "NFTs Bridge",
+      name: "About",
       url: "",
       status: "Coming Soon",
     },
@@ -72,12 +68,17 @@ export const Navbar = () => {
           <div className="mr-20 ml-auto px-2 py-2">
             <div className="flex flex-row">
               {Pages.map((page, i) => (
-                <p
+                <div
                   key={i}
-                  className="ml-2 mr-2 text-white cursor-pointer hover:font-light font-bold text-lg"
+                  className="flex ml-2 mr-2"
                 >
-                  {page.name}
-                </p>
+                  <p  className="ml-0 mr-0 text-white cursor-pointer hover:font-light font-bold text-lg">
+                    {page.name}
+                  </p>
+                  <div className={` ${page.status === 'Live' ? 'bg-green-400' : 'bg-gray-400'}  ${ page.status === 'Live' ? 'w-[50px]' : 'w-[101px]' } text-center   rounded-full h-[19px]`}>
+                    <p className={` ${page.status === 'Live' ? 'text-black' : 'text-white'} mt-[2px] py-0 px-1 mr-0 text-xs`}>{page.status}</p>
+                  </div>
+                </div>
               ))}
             </div>
           </div>
