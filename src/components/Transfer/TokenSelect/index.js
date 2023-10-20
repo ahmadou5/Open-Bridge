@@ -8,15 +8,11 @@ export const TokenSelect = () => {
   const [continue2, setContinue2] = useState(false)
   const { amount } = useAmountStore()
   const { expand2 } = expand1Store();
-  const ExpandableY = expand1Store((state) => state.toggleExpand3);
-  const ExpandableZ = expand1Store((state) => state.toggleExpand2);
+  
   const handleContinue = () => {
-    ExpandableZ();
-    ExpandableY();
+   
   }
-  const handleApprove = () => {
-    setApproved(true)
-  }
+  
   return (
     <div
       style={{ "backdrop-filter": "blur(14px)" }}
@@ -67,7 +63,7 @@ export const TokenSelect = () => {
             <input placeholder="Enter Amunt"  className="w-[30%] mt-9 h-[40px] ml-auto mr-auto items-center justify-center   rounded-md py-2 px-2 bg-slate-600"  type="text" />
           </div>
           <div className="mt-5 mb-5">
-            <ApproveButton click={handleApprove()} text={'Approve'} />
+            <ApproveButton text={'Approve'} />
           </div>
         </div>
         </div>
