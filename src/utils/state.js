@@ -8,7 +8,12 @@ export const expand1Store =  create((set) => ( {
     expand3: false,
     toggleExpand1: () => set( state => ({expand1: !state.expand1})),
     toggleExpand2: () => set(state => ({expand2: !state.expand2})),
-    toggleExpand3: () => set(state => ({expand2: !state.expand2})),
+    toggleExpand3: () => set(state => ({expand3: !state.expand3})),
+}))
+
+export const useExpandStore = create((set) => ({
+    expand: false,
+    toggleExpand: () => set(state => ({expand: !state.expand})),
 }))
 
 export const useAmountStore = create((set) => ({
