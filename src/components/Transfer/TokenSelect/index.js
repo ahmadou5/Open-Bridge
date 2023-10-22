@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-import { useContractWrite, usePrepareContractWrite, useAccount } from 'wagmi'
+import { useContractWrite, usePrepareContractWrite, useAccount } from "wagmi";
 import { Tokens } from "@/utils/Tokens";
 import { Bridge, Cake } from "@/utils/contracts";
 import { expand1Store, useAmountStore, useExpandStore } from "@/utils/state";
@@ -11,13 +11,12 @@ import {
   ContinueButton,
 } from "@/components/Buttons";
 
-
 export const TokenSelect = () => {
   const [approved, setApproved] = useState(false);
   const { amount } = useAmountStore();
+  const updateAmount = useAmountStore((state) => state.addAmount);
   const { expand2 } = expand1Store();
   const { address: userAddress } = useAccount();
-
 
   const toggleExpand2 = expand1Store((state) => state.toggleExpand2);
   const toggleExpand3 = useExpandStore((state) => state.toggleExpand);
@@ -25,53 +24,63 @@ export const TokenSelect = () => {
     toggleExpand2();
     toggleExpand3();
   };
-  
-  const token = Tokens[0].address
-  const { config, error } = usePrepareContractWrite({
-    address: Cake.address,
+
+  const { config: token2 } = usePrepareContractWrite({
+    address: Tokens[0].address,
     abi: [
       {
-        "inputs": [
-            {
-                "internalType": "address",
-                "name": "_to",
-                "type": "address"
-            },
-            {
-                "internalType": "uint256",
-                "name": "_amount",
-                "type": "uint256"
-            }
+        inputs: [
+          { internalType: "address", name: "spender", type: "address" },
+          { internalType: "uint256", name: "amount", type: "uint256" },
         ],
-        "name": "mint",
-        "outputs": [],
-        "stateMutability": "nonpayable",
-        "type": "function"
-    }
+        name: "approve",
+        outputs: [{ internalType: "bool", name: "", type: "bool" }],
+        stateMutability: "nonpayable",
+        type: "function",
+      },
     ],
-    functionName:"mint",
+    functionName: "approve",
+    args: [Bridge.address, amount],
+    gas: 400000,
+  });
+  const { write: approvedt, isSuccess, isLoading, data: tokendata } = useContractWrite(token2);
+
+  const handleApproved = async () => {
+    try {
+      alert('error')
+      await approvedt?.();
+      
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const token = Tokens[0].address;
+  const { config, error } = usePrepareContractWrite({
+    address: Bridge.address,
+    abi: Bridge.abi,
+    functionName: "transferTokensPayLINK",
     args: [
+      5790810961207155433,
       userAddress,
-      1000000000000,
+      token,
+      1,
     ],
     gas: 400000,
-   
   });
-  const {
-    write: mint,
-    data
-  } = useContractWrite(config);
-  
-  const handlemint = () => {
+  const { write: bridge, isLoading:brLoading, isSuccess:brSuccess, isError:brError ,data:brData } = useContractWrite(config);
+
+  const handlebridge = () => {
     try {
-      mint?.()
-
+      bridge?.();
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }
-  }
-   
+  };
 
+  const handleAmount = (event) => {
+   
+  }
 
   return (
     <div
@@ -91,30 +100,59 @@ export const TokenSelect = () => {
       >
         <div className="w-[100%] text-center">
           <p className="font-extralight ">
-            {approved
+            {isSuccess
               ? "Initiate Your Cross Chain Transaction"
               : "Select and Approve the Token Your are Wishin to open bridge"}
           </p>
         </div>
         {
           <div>
-          <div className="w-[100%] h-[120px] mt-5 flex flex-col justify-items-center ml-auto mr-auto">
-            <div className="w-[95%] ml-auto mr-auto flex ">
-              
-            </div>
-            <div className="mt-5 mb-5">
-              <BrigeButton click={() => handlemint()} text={"Cross-Chain"} />
-            </div>
-            <div className={`w-[97%] mt-5  h-[70px] ml-auto mr-auto mb-6 `}>
-              <ContinueButton
-                click={() => {
-                  handletoggle();
-                }}
-                text={"Continue"}
-              />
+            <div className="w-[100%] h-[120px] mt-5 flex flex-col justify-items-center ml-auto mr-auto">
+              <div className="w-[95%] ml-auto mr-auto flex ">
+                {!approved && (
+                  <>
+                    <div className={`w-[95%] ml-auto mr-auto flex ${isSuccess && "hidden"}`}>
+                      <div className="w-[60%] flex  py-2 px-2  ml-14 mr-auto ">
+                        <p className="w-auto mt-8 mb-4 ml-">Select Token</p>
+                        <select
+                          placeholder="Select Token"
+                          className="w-[70%] mt-7 h-[40px] ml-auto mr-auto items-center justify-center   rounded-md py-2 px-2 bg-slate-600"
+                        >
+                          <option value={"ETH"}>CCIP BNM</option>
+                        </select>
+                      </div>
+                      <input
+                        onChange={(e) => updateAmount(e.target.value)}
+                        placeholder="Enter Amount"
+                        className="w-[30%] mt-9 h-[40px] ml-auto mr-auto items-center justify-center   rounded-md py-2 px-2 bg-slate-600"
+                        type="number"
+                      />
+                    </div>
+                    
+                  </>
+                )}
+              </div>
+              <div className="mt-5 mb-5">
+                {brLoading && <>br brLoading</>}
+                {brError && <div className="w-20 h-8 bg-red-600">br Error</div>}
+                {!isSuccess && <Button click={() => handleApproved()} text={`${isLoading ? "Approving..." : "Approve"}`} /> }
+                {isSuccess && (
+                  <BrigeButton
+                    click={() => handlebridge()}
+                    text={"Cross-Chain"}
+                  />
+                )}
+              </div>
+              <div className={`w-[97%] mt-5  h-[70px] ml-auto mr-auto mb-6 `}>
+                { isSuccess && <ContinueButton
+                  click={() => {
+                    handletoggle();
+                  }}
+                  text={"Continue"}
+                />}
+              </div>
             </div>
           </div>
-        </div>
         }
       </div>
     </div>
@@ -130,8 +168,8 @@ const BridgeUi = ({
   const [alert, setAlert] = useState(false);
   const handlemint = () => {
     window.alert?.(error);
-    mint?.()
-  }
+    mint?.();
+  };
 
   return (
     <div>
@@ -155,7 +193,7 @@ const BridgeUi = ({
   );
 };
 
-const ApproveUi = ({ setApproved , Bridge}) => {
+const ApproveUi = ({ setApproved, Bridge }) => {
   const handleContinue = () => {
     setApproved(true);
     console.log("continue clicked");
