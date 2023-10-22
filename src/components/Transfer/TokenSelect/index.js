@@ -1,18 +1,78 @@
+"use client";
 import { useState } from "react";
-import { expand1Store, useAmountStore } from "@/utils/state";
-import { ApproveButton, BrigeButton, Button, ContinueButton } from "@/components/Buttons";
+import { useContractWrite, usePrepareContractWrite, useAccount } from 'wagmi'
+import { Tokens } from "@/utils/Tokens";
+import { Bridge, Cake } from "@/utils/contracts";
+import { expand1Store, useAmountStore, useExpandStore } from "@/utils/state";
+import {
+  ApproveButton,
+  BrigeButton,
+  Button,
+  ContinueButton,
+} from "@/components/Buttons";
+
 
 export const TokenSelect = () => {
-
-  const [approved, setApproved] = useState(true)
-  const [continue2, setContinue2] = useState(false)
-  const { amount } = useAmountStore()
+  const [approved, setApproved] = useState(false);
+  const { amount } = useAmountStore();
   const { expand2 } = expand1Store();
+  const { address: userAddress } = useAccount();
+
+
+  const toggleExpand2 = expand1Store((state) => state.toggleExpand2);
+  const toggleExpand3 = useExpandStore((state) => state.toggleExpand);
+  const handletoggle = () => {
+    toggleExpand2();
+    toggleExpand3();
+  };
   
-  const handleContinue = () => {
+  const token = Tokens[0].address
+  const { config, error } = usePrepareContractWrite({
+    address: Cake.address,
+    abi: [
+      {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "_to",
+                "type": "address"
+            },
+            {
+                "internalType": "uint256",
+                "name": "_amount",
+                "type": "uint256"
+            }
+        ],
+        "name": "mint",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    }
+    ],
+    functionName:"mint",
+    args: [
+      userAddress,
+      1000000000000,
+    ],
+    gas: 400000,
    
-  }
+  });
+  const {
+    write: mint,
+    data
+  } = useContractWrite(config);
   
+  const handlemint = () => {
+    try {
+      mint?.()
+
+    } catch (error) {
+      console.log(error)
+    }
+  }
+   
+
+
   return (
     <div
       style={{ "backdrop-filter": "blur(14px)" }}
@@ -31,53 +91,98 @@ export const TokenSelect = () => {
       >
         <div className="w-[100%] text-center">
           <p className="font-extralight ">
-            { approved ? 'Initiate Your Cross Chain Transaction' : 'Select and Approve the Token Your are Wishin to open bridge'}
+            {approved
+              ? "Initiate Your Cross Chain Transaction"
+              : "Select and Approve the Token Your are Wishin to open bridge"}
           </p>
         </div>
-        { 
-        approved ? 
-        <div>
+        {
+          <div>
           <div className="w-[100%] h-[120px] mt-5 flex flex-col justify-items-center ml-auto mr-auto">
-          <div className="w-[95%] ml-auto mr-auto flex ">
-
-          </div>
-          <div className="mt-5 mb-5">
-            <BrigeButton text={'Cross-Chain'} />
-          </div>
-        </div>
-        </div> 
-        :
-        <div>
-          <div className="w-[100%] h-[120px] mt-5 flex flex-col justify-items-center ml-auto mr-auto">
-          <div className="w-[95%] ml-auto mr-auto flex ">
-           <div className="w-[60%] flex  py-2 px-2  ml-14 mr-auto ">
-              <p className="w-auto mt-8 mb-4 ml-">Select Token</p>
-              <select
-                placeholder="Select Token"
-                className="w-[70%] mt-7 h-[40px] ml-auto mr-auto items-center justify-center   rounded-md py-2 px-2 bg-slate-600"
-              >
-                <option value={"ETH"}>ETH</option>
-                <option value={"USDT"}>USDT</option>
-              </select>
+            <div className="w-[95%] ml-auto mr-auto flex ">
+              
             </div>
-            <input placeholder="Enter Amunt"  className="w-[30%] mt-9 h-[40px] ml-auto mr-auto items-center justify-center   rounded-md py-2 px-2 bg-slate-600"  type="text" />
+            <div className="mt-5 mb-5">
+              <BrigeButton click={() => handlemint()} text={"Cross-Chain"} />
+            </div>
+            <div className={`w-[97%] mt-5  h-[70px] ml-auto mr-auto mb-6 `}>
+              <ContinueButton
+                click={() => {
+                  handletoggle();
+                }}
+                text={"Continue"}
+              />
+            </div>
           </div>
-          <div className="mt-5 mb-5">
-            <ApproveButton text={'Approve'} />
-          </div>
-        </div>
         </div>
         }
       </div>
-      
-      <div
-        className={`w-[97%] mt-2 h-[70px] ml-auto mr-auto mb-6  ${
-          expand2 === false && "hidden"
-        }`}
-      >
-        {
-          approved &&  <ContinueButton click={handleContinue()} text={'Continue'} />
-        }
+    </div>
+  );
+};
+
+const BridgeUi = ({
+  error,
+  mint,
+  toggleExpand3 = { toggleExpand3 },
+  toggleExpand2 = { toggleExpand2 },
+}) => {
+  const [alert, setAlert] = useState(false);
+  const handlemint = () => {
+    window.alert?.(error);
+    mint?.()
+  }
+
+  return (
+    <div>
+      <div className="w-[100%] h-[120px] mt-5 flex flex-col justify-items-center ml-auto mr-auto">
+        <div className="w-[95%] ml-auto mr-auto flex ">
+          {alert && <Button click={toggleExpand3} text={"Claim"} />}
+        </div>
+        <div className="mt-5 mb-5">
+          <BrigeButton click={() => handlemint()} text={"Cross-Chain"} />
+        </div>
+        <div className={`w-[97%] mt-5  h-[70px] ml-auto mr-auto mb-6 `}>
+          <ContinueButton
+            click={() => {
+              handletoggle();
+            }}
+            text={"Continue"}
+          />
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const ApproveUi = ({ setApproved , Bridge}) => {
+  const handleContinue = () => {
+    setApproved(true);
+    console.log("continue clicked");
+  };
+  return (
+    <div>
+      <div className="w-[100%] h-[120px] mt-5 flex flex-col justify-items-center ml-auto mr-auto">
+        <div className="w-[95%] ml-auto mr-auto flex ">
+          <div className="w-[60%] flex  py-2 px-2  ml-14 mr-auto ">
+            <p className="w-auto mt-8 mb-4 ml-">Select Token</p>
+            <select
+              placeholder="Select Token"
+              className="w-[70%] mt-7 h-[40px] ml-auto mr-auto items-center justify-center   rounded-md py-2 px-2 bg-slate-600"
+            >
+              <option value={"ETH"}>ETH</option>
+              <option value={"USDT"}>USDT</option>
+            </select>
+          </div>
+          <input
+            placeholder="Enter Amunt"
+            className="w-[30%] mt-9 h-[40px] ml-auto mr-auto items-center justify-center   rounded-md py-2 px-2 bg-slate-600"
+            type="text"
+          />
+        </div>
+        <div className="mt-5 mb-5">
+          <ApproveButton click={handleContinue} text={"Approve"} />
+        </div>
       </div>
     </div>
   );
