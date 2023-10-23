@@ -71,7 +71,7 @@ export const ChainSelect = () => {
           </div>
         </div>
       </div>
-      {isConnected && <div className={`w-[20%] ml-auto mr-auto h-8 bg-green-400 text-center mb-5 py-1 px-1 rounded-lg ${expand1 === false && 'hidden'} `}>Connected</div>}
+      {isConnected && <div className={`w-[20%] ml-auto mr-auto h-8 bg-green-600 text-center mb-5 py-1 px-1 rounded-full ${expand1 === false && 'hidden'} `}>Wallet Connected</div>}
       <div
         className={`h-[60px]  w-[97%] ml-auto mr-auto mt-3 ${
           expand1 === false && "hidden"
