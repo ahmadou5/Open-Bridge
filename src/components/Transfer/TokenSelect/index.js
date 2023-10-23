@@ -4,12 +4,14 @@ import { useContractWrite, usePrepareContractWrite, useAccount } from "wagmi";
 import { Tokens } from "@/utils/Tokens";
 import { Bridge, Cake } from "@/utils/contracts";
 import { expand1Store, useAmountStore, useExpandStore } from "@/utils/state";
+import { utils } from 'ethers'
 import {
   ApproveButton,
   BrigeButton,
   Button,
   ContinueButton,
 } from "@/components/Buttons";
+import { parseUnits } from "viem";
 
 export const TokenSelect = () => {
   const [approved, setApproved] = useState(false);
@@ -17,7 +19,6 @@ export const TokenSelect = () => {
   const updateAmount = useAmountStore((state) => state.addAmount);
   const { expand2 } = expand1Store();
   const { address: userAddress } = useAccount();
-
   const toggleExpand2 = expand1Store((state) => state.toggleExpand2);
   const toggleExpand3 = useExpandStore((state) => state.toggleExpand);
   const handletoggle = () => {
@@ -40,7 +41,7 @@ export const TokenSelect = () => {
       },
     ],
     functionName: "approve",
-    args: [Bridge.address, amount],
+    args: [Bridge.address, parsed],
     gas: 400000,
   });
   const { write: approvedt, isSuccess, isLoading, data: tokendata } = useContractWrite(token2);
@@ -61,10 +62,10 @@ export const TokenSelect = () => {
     abi: Bridge.abi,
     functionName: "transferTokensPayLINK",
     args: [
-      5790810961207155433,
+      '12532609583862916517',
       userAddress,
       token,
-      1,
+      1000000000000000000,
     ],
     gas: 400000,
   });
@@ -72,6 +73,7 @@ export const TokenSelect = () => {
 
   const handlebridge = () => {
     try {
+      alert(error)
       bridge?.();
     } catch (error) {
       console.log(error);
@@ -139,7 +141,7 @@ export const TokenSelect = () => {
                 {isSuccess && (
                   <BrigeButton
                     click={() => handlebridge()}
-                    text={"Cross-Chain"}
+                    text={`${ brLoading ? 'bridging...' : 'Cross-Chain'}`}
                   />
                 )}
               </div>
