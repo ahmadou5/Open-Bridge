@@ -11,12 +11,11 @@ import {
   Button,
   ContinueButton,
 } from "@/components/Buttons";
-import { parseUnits } from "viem";
+import { parseUnits, parseEther, formatEther } from "viem";
 
 export const TokenSelect = () => {
+  const [nAmount, setNamount] = useState('')
   const [approved, setApproved] = useState(false);
-  const { amount } = useAmountStore();
-  const updateAmount = useAmountStore((state) => state.addAmount);
   const { expand2 } = expand1Store();
   const { address: userAddress } = useAccount();
   const toggleExpand2 = expand1Store((state) => state.toggleExpand2);
@@ -25,6 +24,8 @@ export const TokenSelect = () => {
     toggleExpand2();
     toggleExpand3();
   };
+
+  
 
   const { config: token2 } = usePrepareContractWrite({
     address: Tokens[0].address,
@@ -41,7 +42,7 @@ export const TokenSelect = () => {
       },
     ],
     functionName: "approve",
-    args: [Bridge.address, amount],
+    args: [Bridge.address, nAmount],
     gas: 400000,
   });
   const { write: approvedt, isSuccess, isLoading, data: tokendata } = useContractWrite(token2);
@@ -65,7 +66,7 @@ export const TokenSelect = () => {
       '12532609583862916517',
       userAddress,
       token,
-      1000000000000000000,
+      nAmount,
     ],
     gas: 400000,
   });
@@ -101,7 +102,7 @@ export const TokenSelect = () => {
         } h-[230px]  mt-4 ml-auto mr-auto`}
       >
         <div className="w-[100%] text-center">
-          <p className="font-extralight ">
+          <p className="font-extralight text-xl ">
             {isSuccess
               ? "Initiate Your Cross Chain Transaction"
               : "Select and Approve the Token Your are Wishin to open bridge"}
@@ -124,7 +125,7 @@ export const TokenSelect = () => {
                         </select>
                       </div>
                       <input
-                        onChange={(e) => updateAmount(e.target.value)}
+                        onChange={(e) => setNamount(e.target.value)}
                         placeholder="Enter Amount"
                         className="w-[30%] mt-9 h-[40px] ml-auto mr-auto items-center justify-center   rounded-md py-2 px-2 bg-slate-600"
                         type="number"
@@ -134,17 +135,26 @@ export const TokenSelect = () => {
                   </>
                 )}
               </div>
-              <div className="mt-5 mb-5">
+              <div className="mt-5 mb-3 text-md">
                 {brLoading && <>br brLoading</>}
                 {brError && <div className="w-20 h-8 bg-red-600">br Error</div>}
                 {!isSuccess && <Button click={() => handleApproved()} text={`${isLoading ? "Approving..." : "Approve"}`} /> }
-                {isSuccess && (
+                {isSuccess && ( 
+                <div className={`${brSuccess && 'hidden'}`}>
                   <BrigeButton
                     click={() => handlebridge()}
                     text={`${ brLoading ? 'bridging...' : 'Cross-Chain'}`}
                   />
+                </div>
                 )}
               </div>
+              {brSuccess && 
+              <div className="w-[80%] text-xl mb-3 h-auto text-center ml-auto mr-auto ">
+                <p>{`🎉🎉 Kudos!! You Successfully Bridge 🌉 ${nAmount} amount of ${Tokens[0].name} tokens to Polygon Mumbai.`}</p>
+                <p className="mt-2">{`Click the Continue Button to Redeem Your $${Tokens[0].symbol} on Mumbai Testnet `}</p>
+              </div>
+              }
+              
               <div className={`w-[97%] mt-5  h-[70px] ml-auto mr-auto mb-6 `}>
                 { isSuccess && <ContinueButton
                   click={() => {

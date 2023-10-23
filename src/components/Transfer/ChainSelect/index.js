@@ -1,5 +1,6 @@
 "use client";
 import { Web3Button, Web3Modal, useWeb3Modal } from "@web3modal/react";
+import { etherUnits } from "viem";
 import { useState } from "react";
 import {
   Button,
@@ -42,12 +43,12 @@ export const ChainSelect = () => {
       <div
         className={`w-[97%] py-2 px-2 ${
           expand1 === false && "hidden"
-        } h-[230px]  mt-4 ml-auto mr-auto`}
+        } h-[230px] ${isConnected && 'h-[90px]'}  mt-4 ml-auto mr-auto`}
       >
         <div className="w-[100%] text-center">
-          <p className="font-extralight ">Select the Route for bridging</p>
+          <p className="font-extralight text-xl">Select the Route for bridging</p>
         </div>
-        <div className="w-[100%] h-36 mt-5 flex justify-items-center ml-auto mr-auto">
+        <div className={`w-[100%] h-36 mt-5 ${isConnected && 'hidden'} ${isConnected && 'h-1'} flex justify-items-center ml-auto mr-auto`}>
           <div className="w-[50%] py-2 px-2  ml-14 mr-auto ">
             <p>Source Chain</p>
             <select
@@ -70,6 +71,7 @@ export const ChainSelect = () => {
           </div>
         </div>
       </div>
+      {isConnected && <div className={`w-[20%] ml-auto mr-auto h-8 bg-green-400 text-center mb-5 py-1 px-1 rounded-lg ${expand1 === false && 'hidden'} `}>Connected</div>}
       <div
         className={`h-[60px]  w-[97%] ml-auto mr-auto mt-3 ${
           expand1 === false && "hidden"
