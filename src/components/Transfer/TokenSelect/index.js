@@ -41,7 +41,7 @@ export const TokenSelect = () => {
       },
     ],
     functionName: "approve",
-    args: [Bridge.address, parsed],
+    args: [Bridge.address, amount],
     gas: 400000,
   });
   const { write: approvedt, isSuccess, isLoading, data: tokendata } = useContractWrite(token2);
