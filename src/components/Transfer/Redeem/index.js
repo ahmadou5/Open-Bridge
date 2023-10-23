@@ -22,20 +22,11 @@ export const Redeem = () => {
         address: userAddress,
         chainId: polygonMumbai.id ,
         token: Tokens[0].address2,
-    })
-
-    useEffect(() => {
-        if (BNMBalance){
-            setBalance(BNMBalance.formatted);
-        console.log({balance});
-        console.log({chains: messageID})
-        }
-    });
-
+    }) 
     
     return(
     <div style={{ "backdrop-filter": "blur(14px)" }} className={`w-[95%] z-10 bg-[#0B0E11] backdrop-blur-lg bg-clip-padding bg-opacity-60 py-2 px-2 ml-auto mr-auto mt-6 lg:w-[80%] rounded-3xl ${ expand === true && 'h-auto'} ${expand === false && 'h-[100px]'}`}>
-        <div onClick={() => change(polygonMumbai.id)} className="w-[97%] mt-4 ml-auto mr-auto py-3 cursor-pointer px-3 h-10 flex">
+        <div className="w-[97%] mt-4 ml-auto mr-auto py-3 cursor-pointer px-3 h-10 flex">
            <p>3.</p>
            <p className="ml-2 mr-2">Status</p>
         </div>
@@ -47,7 +38,7 @@ export const Redeem = () => {
                 You bridged {amount} CCIP-BnM from Sepolia to Polygon Mumbai
                {/* {`${messageID} CCIP ${balance}`} */}
                <p className="mt-5">
-                    Current Balance: {balance} CCIP-BnM
+                    Current Balance: {BNMBalance?.formatted} CCIP-BnM
                 </p>
             </div>
         </div>

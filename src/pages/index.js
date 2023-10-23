@@ -10,6 +10,8 @@ import { Bridge } from "@/utils/contracts";
 import { useContractWrite, usePrepareContractWrite } from 'wagmi'
 import { Tokens } from '@/utils/Tokens'
 import { Button } from '@/components/Buttons'
+import { Divider } from '@/components/Divider'
+import { Footer } from '@/components/Footer'
 
 
 const inter = Inter({ subsets: ['latin'] })
@@ -20,20 +22,6 @@ export default function Home() {
   const { address:userAddress, isConnected, isConnecting } = useAccount()
   
   
-  const tokenA = Tokens[0].address;
-    const { config } = usePrepareContractWrite({
-      address: Bridge.address,
-      abi: Bridge.abi,
-      functionName: "transferTokensPayNative",
-      args: {
-        _destinationChainSelector: "16015286601757825753",
-        _receiver: userAddress,
-        _token: tokenA,
-        _amount: 32,
-      },
-    });
-    const { write: bridge } = useContractWrite(config)
-  
   
   return (
     <main
@@ -42,7 +30,8 @@ export default function Home() {
       <Navbar />
       <Hero />
       <Transfer />
-      <Button text={'Bridge'} click={() => bridge()}/>
+      <Divider />
+      <Footer />
     </main>
   )
 }

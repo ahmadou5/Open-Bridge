@@ -4,7 +4,7 @@ import { Redeem } from "./Redeem"
 
 export const Transfer = ({bridge}) => {
     return(
-    <div className="w-[100%] h-[1200px]">
+    <div className="w-[100%] h-[900px]">
         <ChainSelect />
         <TokenSelect />
         <Redeem />

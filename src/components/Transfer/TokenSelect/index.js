@@ -1,21 +1,31 @@
 "use client";
 import { useState } from "react";
-import { useContractWrite, usePrepareContractWrite, useAccount } from "wagmi";
+import {
+  useContractWrite,
+  usePrepareContractWrite,
+  useAccount,
+  useSwitchNetwork,
+} from "wagmi";
 import { Tokens } from "@/utils/Tokens";
 import { Bridge, Cake } from "@/utils/contracts";
 import { expand1Store, useAmountStore, useExpandStore } from "@/utils/state";
 import {
-  ApproveButton,
   BrigeButton,
   Button,
   ContinueButton,
 } from "@/components/Buttons";
+<<<<<<< HEAD
 import { parseEther } from "viem";
+=======
+import { parseUnits, parseEther, formatEther } from "viem";
+import Link from "next/link";
+import { polygonMumbai } from "viem/chains";
+>>>>>>> 269616f6ef5db48ba0a9c40dcdf2867a841eab9a
 
 export const TokenSelect = () => {
+  
+  const [nAmount, setNamount] = useState("0");
   const [approved, setApproved] = useState(false);
-  const { amount } = useAmountStore();
-  const updateAmount = useAmountStore((state) => state.addAmount);
   const { expand2 } = expand1Store();
   const { address: userAddress } = useAccount();
   const toggleExpand2 = expand1Store((state) => state.toggleExpand2);
@@ -23,7 +33,16 @@ export const TokenSelect = () => {
   const handletoggle = () => {
     toggleExpand2();
     toggleExpand3();
+    change(polygonMumbai.id);
   };
+
+  const {
+    switchNetwork: change,
+    isLoading: chainLoad,
+    isSuccess: chainSuccess,
+  } = useSwitchNetwork({
+    chainId: polygonMumbai.id,
+  });
 
   const { config: token2 } = usePrepareContractWrite({
     address: Tokens[0].address,
@@ -40,16 +59,24 @@ export const TokenSelect = () => {
       },
     ],
     functionName: "approve",
+<<<<<<< HEAD
     args: [Bridge.address, parseEther(amount.toString())],
+=======
+    args: [Bridge.address, parseUnits(nAmount, 18)],
+>>>>>>> 269616f6ef5db48ba0a9c40dcdf2867a841eab9a
     gas: 400000,
   });
-  const { write: approvedt, isSuccess, isLoading, data: tokendata } = useContractWrite(token2);
+  const {
+    write: approvedt,
+    isSuccess,
+    isLoading,
+    data: tokendata,
+  } = useContractWrite(token2);
 
   const handleApproved = async () => {
     try {
-      alert('error')
+      alert("error");
       await approvedt?.();
-      
     } catch (error) {
       console.log(error);
     }
@@ -60,34 +87,34 @@ export const TokenSelect = () => {
     address: Bridge.address,
     abi: Bridge.abi,
     functionName: "transferTokensPayLINK",
-    args: [
-      '12532609583862916517',
-      userAddress,
-      token,
-      1000000000000000000,
-    ],
-    gas: 400000,
+    args: ["12532609583862916517", userAddress, token, parseUnits(nAmount, 18)],
+    gas: 300000,
   });
-  const { write: bridge, isLoading:brLoading, isSuccess:brSuccess, isError:brError ,data:brData } = useContractWrite(config);
+  const {
+    write: bridge,
+    isLoading: brLoading,
+    isSuccess: brSuccess,
+    isError: brError,
+    data: brData,
+  } = useContractWrite(config);
 
   const handlebridge = () => {
     try {
-      alert(error)
+      alert(error);
+      alert(parseUnits(nAmount,18))
       bridge?.();
     } catch (error) {
       console.log(error);
     }
   };
 
-  const handleAmount = (event) => {
-   
-  }
+  const handleAmount = (event) => {};
 
   return (
     <div
       style={{ "backdrop-filter": "blur(14px)" }}
       className={`w-[95%] z-10 bg-[#0B0E11] backdrop-blur-lg bg-clip-padding bg-opacity-60 py-2 px-2 ml-auto mr-auto mt-6 lg:w-[80%] rounded-3xl ${
-        expand2 === true && "h-auto"
+        expand2 === true && "h-[380px]"
       } ${expand2 === false && "h-[100px]"}`}
     >
       <div className="w-[97%] mt-4 ml-auto mr-auto py-3 cursor-pointer px-3 h-10 flex">
@@ -100,7 +127,7 @@ export const TokenSelect = () => {
         } h-[230px]  mt-4 ml-auto mr-auto`}
       >
         <div className="w-[100%] text-center">
-          <p className="font-extralight ">
+          <p className="font-extralight text-xl ">
             {isSuccess
               ? "Initiate Your Cross Chain Transaction"
               : "Select and Approve the Token Your are Wishin to open bridge"}
@@ -112,7 +139,11 @@ export const TokenSelect = () => {
               <div className="w-[95%] ml-auto mr-auto flex ">
                 {!approved && (
                   <>
-                    <div className={`w-[95%] ml-auto mr-auto flex ${isSuccess && "hidden"}`}>
+                    <div
+                      className={`w-[95%] ml-auto mr-auto flex ${
+                        isSuccess && "hidden"
+                      }`}
+                    >
                       <div className="w-[60%] flex  py-2 px-2  ml-14 mr-auto ">
                         <p className="w-auto mt-8 mb-4 ml-">Select Token</p>
                         <select
@@ -123,105 +154,78 @@ export const TokenSelect = () => {
                         </select>
                       </div>
                       <input
-                        onChange={(e) => updateAmount(e.target.value)}
+                        onChange={(e) => setNamount(e.target.value)}
                         placeholder="Enter Amount"
                         className="w-[30%] mt-9 h-[40px] ml-auto mr-auto items-center justify-center   rounded-md py-2 px-2 bg-slate-600"
                         type="number"
                       />
                     </div>
-                    
                   </>
                 )}
               </div>
-              <div className="mt-5 mb-5">
+              {brData && (
+                <div
+                  className={`w-[20%] ${
+                    !brSuccess && "hidden"
+                  } py-1 px-1 ml-auto mr-auto text-center rounded-lg h-8 bg-green-600`}
+                >
+                  <Link
+                    href={`https://sepolia.etherscan.io/tx/${brData?.hash}`}
+                  >
+                    {`view on Etherscan`}
+                  </Link>
+                </div>
+              )}
+              {brData && (
+                <div
+                  className={`w-[20%] ${
+                    !brSuccess && "hidden"
+                  } py-1 px-1 ml-auto mr-auto text-center rounded-lg h-8 bg-green-600`}
+                >
+                  <Link
+                    href={`https://ccip.chain.link/address/${Bridge.address}`}
+                  >
+                    {`view on Etherscan`}
+                  </Link>
+                </div>
+              )}
+              <div className="mt-5 mb-3 text-md">
                 {brLoading && <>br brLoading</>}
-                {brError && <div className="w-20 h-8 bg-red-600">br Error</div>}
-                {!isSuccess && <Button click={() => handleApproved()} text={`${isLoading ? "Approving..." : "Approve"}`} /> }
-                {isSuccess && (
-                  <BrigeButton
-                    click={() => handlebridge()}
-                    text={`${ brLoading ? 'bridging...' : 'Cross-Chain'}`}
+                {!isSuccess && (
+                  <Button
+                    click={() => handleApproved()}
+                    text={`${isLoading ? "Approving..." : "Approve"}`}
                   />
                 )}
+                {isSuccess && (
+                  <div className={`${brSuccess && "hidden"}`}>
+                    <BrigeButton
+                      click={() => handlebridge()}
+                      text={`${brLoading ? "bridging..." : "Cross-Chain"}`}
+                    />
+                  </div>
+                )}
               </div>
+              {brSuccess && (
+                <div className="w-[90%] text-xl mb-3 h-auto text-center ml-auto mr-auto ">
+                  <p>{`🎉🎉 Kudos!! You Successfully Request to Bridge 🌉 ${nAmount} amount of ${Tokens[0].name} tokens to Polygon Mumbai.`}</p>
+                  <p className="mt-2">{`Click the Continue Button to Redeem Your $${Tokens[0].symbol} on Mumbai Testnet `}</p>
+                </div>
+              )}
+
               <div className={`w-[97%] mt-5  h-[70px] ml-auto mr-auto mb-6 `}>
-                { isSuccess && <ContinueButton
-                  click={() => {
-                    handletoggle();
-                  }}
-                  text={"Continue"}
-                />}
+                {isSuccess && (
+                  <ContinueButton
+                    click={() => {
+                      handletoggle();
+                    }}
+                    text={"Continue"}
+                  />
+                )}
               </div>
             </div>
           </div>
         }
-      </div>
-    </div>
-  );
-};
-
-const BridgeUi = ({
-  error,
-  mint,
-  toggleExpand3 = { toggleExpand3 },
-  toggleExpand2 = { toggleExpand2 },
-}) => {
-  const [alert, setAlert] = useState(false);
-  const handlemint = () => {
-    window.alert?.(error);
-    mint?.();
-  };
-
-  return (
-    <div>
-      <div className="w-[100%] h-[120px] mt-5 flex flex-col justify-items-center ml-auto mr-auto">
-        <div className="w-[95%] ml-auto mr-auto flex ">
-          {alert && <Button click={toggleExpand3} text={"Claim"} />}
-        </div>
-        <div className="mt-5 mb-5">
-          <BrigeButton click={() => handlemint()} text={"Cross-Chain"} />
-        </div>
-        <div className={`w-[97%] mt-5  h-[70px] ml-auto mr-auto mb-6 `}>
-          <ContinueButton
-            click={() => {
-              handletoggle();
-            }}
-            text={"Continue"}
-          />
-        </div>
-      </div>
-    </div>
-  );
-};
-
-const ApproveUi = ({ setApproved, Bridge }) => {
-  const handleContinue = () => {
-    setApproved(true);
-    console.log("continue clicked");
-  };
-  return (
-    <div>
-      <div className="w-[100%] h-[120px] mt-5 flex flex-col justify-items-center ml-auto mr-auto">
-        <div className="w-[95%] ml-auto mr-auto flex ">
-          <div className="w-[60%] flex  py-2 px-2  ml-14 mr-auto ">
-            <p className="w-auto mt-8 mb-4 ml-">Select Token</p>
-            <select
-              placeholder="Select Token"
-              className="w-[70%] mt-7 h-[40px] ml-auto mr-auto items-center justify-center   rounded-md py-2 px-2 bg-slate-600"
-            >
-              <option value={"ETH"}>ETH</option>
-              <option value={"USDT"}>USDT</option>
-            </select>
-          </div>
-          <input
-            placeholder="Enter Amunt"
-            className="w-[30%] mt-9 h-[40px] ml-auto mr-auto items-center justify-center   rounded-md py-2 px-2 bg-slate-600"
-            type="text"
-          />
-        </div>
-        <div className="mt-5 mb-5">
-          <ApproveButton click={handleContinue} text={"Approve"} />
-        </div>
       </div>
     </div>
   );
