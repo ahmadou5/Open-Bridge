@@ -55,7 +55,7 @@ export const ChainSelect = () => {
               className="w-[80%] mt-3 h-[60px] ml-auto mr-auto items-center justify-center   rounded-md py-2 px-2 bg-slate-600"
             >
               <option value={"Sepolia"}>Sepolia</option>
-              <option value={"BaseGoerli"}>BaseGoerli</option>
+              <option value={"mumbai"}>Polygon Mumbai</option>
             </select>
           </div>
           <div className="w-[50%] py-2 px-2 ml-14 mr-auto ">
@@ -64,7 +64,7 @@ export const ChainSelect = () => {
               placeholder="Select Destination Chain"
               className="w-[80%] mt-3 h-[60px]   ml-auto mr-auto items-center justify-center rounded-md py-2 px-2 bg-slate-600"
             >
-              <option value={"BaseGoerli"}>BaseGoerli</option>
+              <option value={"mumbai"}>polygon Mumbai</option>
               <option value={"Sepolia"}>Sepolia</option>
             </select>
           </div>
