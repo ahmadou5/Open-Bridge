@@ -1,58 +1,6 @@
 import { Divider } from "../Divider"
 export const Footer = ({}) => {
-    const SocialLinks = [
-      {
-        name: 'X',
-        url: '',
-      },
-      {
-        name: 'Tiktok',
-        url: '',
-      },
-      {
-        name: 'Instagram',
-        url: '',
-      },
-      {
-        name: 'Discord',
-        url: '',
-      },
-      {
-        name: 'Github',
-        url: '',
-      },
-  
-    ]
-  
-    
-  
-    const Features = [
-      {
-        name: 'Learn',
-        url: '',
-        status: 'Coming Soon',
-      },
-      {
-        name: 'Jobs',
-        url: '',
-        status: 'Live',
-      },
-      {
-        name: 'HawkShow',
-        url: '',
-        status: 'Coming Soon',
-      },
-      {
-        name: 'Free Dev',
-        url: '',
-        status: 'Coming Soon',
-      },
-      {
-        name: 'Dev Bio',
-        url: '',
-        status: 'Live',
-      },
-    ]
+
     return(
       <div className="w-[100%] mb-5  text-white mt-[40px] py-2 px-2 h-auto lg:h-[400px]" id="bg1">
         <div className="flex ">
@@ -68,7 +16,7 @@ export const Footer = ({}) => {
         <div>
         <div className=" font-semibold">
                 <p className="w-[87%] mt-4 ml-auto ">
-                  © {new Date().getFullYear()} Open Bridge
+                  {new Date().getFullYear()} Open Bridge
                 </p>
         </div>
         </div>
