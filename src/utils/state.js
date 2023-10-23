@@ -20,3 +20,8 @@ export const useAmountStore = create((set) => ({
     amount: 0,
     addAmount: (amount2) => set(state => ({amount: state.amount = amount2 })),
 }))
+
+export const useMessageIDStore = create((set) => ({
+    messageID: "",
+    addMesssageID: (messageID2) => set(state => ({source: state.messageID = messageID2})),
+}))

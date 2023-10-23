@@ -4,14 +4,13 @@ import { useContractWrite, usePrepareContractWrite, useAccount } from "wagmi";
 import { Tokens } from "@/utils/Tokens";
 import { Bridge, Cake } from "@/utils/contracts";
 import { expand1Store, useAmountStore, useExpandStore } from "@/utils/state";
-import { utils } from 'ethers'
 import {
   ApproveButton,
   BrigeButton,
   Button,
   ContinueButton,
 } from "@/components/Buttons";
-import { parseUnits } from "viem";
+import { parseEther } from "viem";
 
 export const TokenSelect = () => {
   const [approved, setApproved] = useState(false);
@@ -41,7 +40,7 @@ export const TokenSelect = () => {
       },
     ],
     functionName: "approve",
-    args: [Bridge.address, amount],
+    args: [Bridge.address, parseEther(amount.toString())],
     gas: 400000,
   });
   const { write: approvedt, isSuccess, isLoading, data: tokendata } = useContractWrite(token2);
