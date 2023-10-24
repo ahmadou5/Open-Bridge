@@ -14,13 +14,11 @@ export const Hero = () => {
             <p className="font-extrabold text-5xl lg:text-8xl">Open Bridge</p>
           </div>
           <div className="mt-20 mb-18 w-[95%] lg:w-[70%] ml-auto mr-auto">
-            <p className="mt-1 mb-2 font-light text-sm lg:text-sm">
-              Open Bridge is a bridge that offers unlimited transfers across chains
-              for tokens and NFTs.
+            <p className="mt-1 mb-2 font-light text-sm lg:text-xl">
+              Open Bridge serves as a limitless bridge for facilitating token and NFT transfers across different chains.
             </p>
-            <p className="mt-1 mb-2 font-light text-sm lg:text-sm">
-              Unlike many other bridges, you avoid double wrapping and never
-              have to retrace your steps.
+            <p className="mt-1 mb-2 font-light text-sm lg:text-xl">
+              What sets it apart from numerous other bridges is its ability to eliminate the need for double wrapping and the necessity to retrace your steps.
             </p>
           </div>
         </div>

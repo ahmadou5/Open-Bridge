@@ -17,6 +17,6 @@ export const useExpandStore = create((set) => ({
 }))
 
 export const useAmountStore = create((set) => ({
-    amount: 0,
+    amount: '0',
     addAmount: (amount2) => set(state => ({amount: state.amount = amount2 })),
 }))
