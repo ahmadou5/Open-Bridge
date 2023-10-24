@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { expand1Store, useExpandStore } from "@/utils/state"
+import { expand1Store, useAmountStore, useExpandStore, useMessageIDStore } from "@/utils/state"
 import { useAccount, useBalance, useSwitchNetwork } from "wagmi"
 import { polygonMumbai } from "wagmi/chains"
 import { Tokens } from "@/utils/Tokens"
@@ -8,12 +8,15 @@ import { formatEther, parseEther, parseUnits } from "viem"
 import Link from "next/link"
 import { Bridge } from "@/utils/contracts"
 import { AddButton } from "@/components/Buttons"
+
 export const Redeem = () => {
     const [balance, setBalance] = useState('')
     const [expand1, setExpand1] = useState(false)
     const [expand2, setExpand2] = useState(false)
     const toggleExpand3 = useExpandStore((state) => state.toggleExpand);
     const { expand } = useExpandStore();
+    const { messageID } = useMessageIDStore();
+    const {amount} = useAmountStore();
     const { switchNetwork:change, isLoading, isSuccess } = useSwitchNetwork({
         chainId: polygonMumbai.id
     })
@@ -22,6 +25,7 @@ export const Redeem = () => {
         address: userAddress,
         chainId: polygonMumbai.id ,
         token: Tokens[0].address2,
+
     })
 
     const addToken = async () => {
@@ -50,6 +54,7 @@ export const Redeem = () => {
             console.log(error);
           }
     }
+
     
     return(
     <div style={{ "backdrop-filter": "blur(14px)" }} className={`w-[95%] z-10 bg-[#0B0E11] backdrop-blur-lg bg-clip-padding bg-opacity-60 py-2 px-2 ml-auto mr-auto mt-6 lg:w-[80%] rounded-3xl ${ expand === true && 'h-auto'} ${expand === false && 'h-[100px]'}`}>
@@ -57,8 +62,8 @@ export const Redeem = () => {
            <p>3.</p>
            <p className="ml-2 mr-2">Status</p>
         </div>
-        <div onClick={ () => setExpand2(true)} className={`w-[97%] py-2 px-2 ${expand === false && 'hidden' } h-[230px]  mt-4 ml-auto mr-auto`}>
-            <div className="w-[100%] text-center">
+        <div onClick={ () => setExpand2(true)} className={`w-[97%] py-2 px-2 ${expand === false && 'hidden' } h-[130px]  mt-4 ml-auto mr-auto`}>
+            <div className="w-[100%] text-center"
                 <p className="font-extralight text-xl ">Redeem Your Bridged Asset to Your Wallet</p>
             </div>
             <div className="w-[100%] h-16 mt-5 flex justify-items-center ml-auto mr-auto">
@@ -94,6 +99,7 @@ export const Redeem = () => {
         <div onClick={ () => setExpand1(false)} className={`w-[97%] mt-2 mb-8 h-[70px] text-lg py-3 px-3 ml-auto mr-auto mb-6 ${expand === false && 'hidden' }`}>
             <AddButton click={() => addToken()} text={`Add $${Tokens[0]?.symbol} Token to Your Wallet`} />
         </div>
+
     </div>
     )
 }
