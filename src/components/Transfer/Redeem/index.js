@@ -42,7 +42,7 @@ export const Redeem = () => {
                 </p>
             </div>
         </div>
-        <a href={`https://ccip.chain.link/msg/${messageID}`} target="_blank">
+        <a href={`https://ccip.chain.link/tx/${messageID}`} target="_blank">
             <div className={`flex justify-center items-center rounded-full cursor-pointer w-[40%] mt-2 h-[40px] ml-auto mr-auto mb-6 bg-green-500 ${expand === false && 'hidden' }`}>View on Explorer</div>
         </a>
     </div>
