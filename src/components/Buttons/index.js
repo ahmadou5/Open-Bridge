@@ -9,6 +9,17 @@ export const Button = ({text, click}) => {
     );
   };
 
+  
+export const AddButton = ({text, click}) => {
+  return (
+    <div>
+      <div onClick={click} className=" flex flex-row ml-auto mr-auto py-1 px-1 cursor-pointer  text-white  bg-green-500 rounded-full  w-[280px] h-[47px]">
+        <p className="text-sm  mt-auto mb-auto font-light ml-auto mr-auto">{text}</p>
+      </div>
+    </div>
+  );
+};
+
   export const BrigeButton = ({text, click}) => {
     return (
       <div>

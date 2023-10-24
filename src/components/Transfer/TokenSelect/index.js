@@ -73,8 +73,8 @@ export const TokenSelect = () => {
 
   const handleApproved = async () => {
     try {
-      await approvedt?.();
-      
+      console.log("error");
+      await approvedt?.(); 
     } catch (error) {
       console.log(error);
     }
@@ -98,11 +98,9 @@ export const TokenSelect = () => {
 
   const handlebridge = async () => {
     try {
-      const contract = getContract({abi: Bridge.abi, address: Bridge.address, publicClient, walletClient});
-      const hash = await contract.write.transferTokensPayLINK(["12532609583862916517", userAddress, token, parseUnits(nAmount, 18)]);
-      console.log(hash);
-      updateMessageID(hash);
-      await publicClient.waitForTransactionReceipt({hash});
+      console.log(error);
+      console.log(parseUnits(nAmount,18))
+      bridge?.();
     } catch (error) {
       console.log(error);
     }
@@ -117,7 +115,7 @@ export const TokenSelect = () => {
         expand2 === true && "h-[380px]"
       } ${expand2 === false && "h-[100px]"}`}
     >
-      <div className="w-[97%] mt-4 ml-auto mr-auto py-3 cursor-pointer px-3 h-10 flex">
+      <div onClick={toggleExpand2} className="w-[97%] mt-4 ml-auto mr-auto py-3 cursor-pointer px-3 h-10 flex">
         <p>2.</p>
         <p className="ml-2 mr-2">Select Token and Bridge</p>
       </div>
@@ -150,6 +148,7 @@ export const TokenSelect = () => {
                           placeholder="Select Token"
                           className="w-[70%] mt-7 h-[40px] ml-auto mr-auto items-center justify-center   rounded-md py-2 px-2 bg-slate-600"
                         >
+                          <option value={"ETH"}></option>
                           <option value={"ETH"}>CCIP BNM</option>
                         </select>
                       </div>
@@ -171,26 +170,15 @@ export const TokenSelect = () => {
                 >
                   <Link
                     href={`https://sepolia.etherscan.io/tx/${brData?.hash}`}
-                  >
-                    {`view on Etherscan`}
-                  </Link>
-                </div>
-              )}
-              {brData && (
-                <div
-                  className={`w-[20%] ${
-                    !brSuccess && "hidden"
-                  } py-1 px-1 ml-auto mr-auto text-center rounded-lg h-8 bg-green-600`}
-                >
-                  <Link
-                    href={`https://ccip.chain.link/address/${Bridge.address}`}
+                    passHref={true}
+                     rel="noopener noreferrer" 
+                     target="_blank"
                   >
                     {`view on Etherscan`}
                   </Link>
                 </div>
               )}
               <div className="mt-5 mb-3 text-md">
-                {brLoading && <>br brLoading</>}
                 {!isSuccess && (
                   <Button
                     click={() => handleApproved()}

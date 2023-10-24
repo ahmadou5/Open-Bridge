@@ -1,5 +1,5 @@
 export const Bridge = {
-    address: '0xed9a3c4bb6585eF9E735D927643d8c6f66e3cdEc',
+    address: '0xBbb27256C9B84D6c7DdddFC29bFaFb5e2b0A6651',
     abi:
     [
         {
