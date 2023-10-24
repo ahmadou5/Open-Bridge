@@ -5,16 +5,19 @@ import {
   usePrepareContractWrite,
   useAccount,
   useSwitchNetwork,
+  usePublicClient,
+  useWalletClient,
 } from "wagmi";
 import { Tokens } from "@/utils/Tokens";
 import { Bridge, Cake } from "@/utils/contracts";
-import { expand1Store, useAmountStore, useExpandStore } from "@/utils/state";
+import { expand1Store, useAmountStore, useExpandStore, useMessageIDStore } from "@/utils/state";
 import {
   BrigeButton,
   Button,
   ContinueButton,
 } from "@/components/Buttons";
-import { parseUnits, parseEther, formatEther } from "viem";
+
+import { parseUnits, parseEther, formatEther, getContract } from "viem";
 import Link from "next/link";
 import { polygonMumbai } from "viem/chains";
 
@@ -26,6 +29,7 @@ export const TokenSelect = () => {
   const { address: userAddress } = useAccount();
   const toggleExpand2 = expand1Store((state) => state.toggleExpand2);
   const toggleExpand3 = useExpandStore((state) => state.toggleExpand);
+  const updateMessageID = useMessageIDStore((state) => state.addMessageID);
   const handletoggle = () => {
     toggleExpand2();
     toggleExpand3();
@@ -64,11 +68,13 @@ export const TokenSelect = () => {
     isLoading,
     data: tokendata,
   } = useContractWrite(token2);
+  const publicClient = usePublicClient();
+  const {data: walletClient} = useWalletClient();
 
   const handleApproved = async () => {
     try {
       console.log("error");
-      await approvedt?.();
+      await approvedt?.(); 
     } catch (error) {
       console.log(error);
     }
@@ -90,7 +96,7 @@ export const TokenSelect = () => {
     data: brData,
   } = useContractWrite(config);
 
-  const handlebridge = () => {
+  const handlebridge = async () => {
     try {
       console.log(error);
       console.log(parseUnits(nAmount,18))
